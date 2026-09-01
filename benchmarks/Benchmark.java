@@ -1,0 +1,5 @@
+public class Benchmark {
+    static long fibonacci(int number) { return number < 2 ? number : fibonacci(number - 1) + fibonacci(number - 2); }
+    static int countPrimes(int limit) { boolean[] prime = new boolean[limit + 1]; java.util.Arrays.fill(prime, true); prime[0] = prime[1] = false; for (int number = 2; number * number <= limit; number++) if (prime[number]) for (int multiple = number * number; multiple <= limit; multiple += number) prime[multiple] = false; int count = 0; for (boolean value : prime) if (value) count++; return count; }
+    public static void main(String[] args) { int fibonacciInput = args.length > 0 ? Integer.parseInt(args[0]) : 35; int primeLimit = args.length > 1 ? Integer.parseInt(args[1]) : 200000; long start = System.nanoTime(); long fr = fibonacci(fibonacciInput); double ft = (System.nanoTime() - start) / 1e9; start = System.nanoTime(); int pr = countPrimes(primeLimit); double pt = (System.nanoTime() - start) / 1e9; System.out.printf("%.6f,%.6f%n", ft, pt); }
+}

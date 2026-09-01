@@ -1,0 +1,9 @@
+# Compiled benchmark artifacts
+/benchmarks/*.exe
+/benchmarks/*.class
+/benchmarks/*.o
+/benchmarks/*.obj
+/benchmarks/*.hi
+/benchmarks/*.pdb
+/benchmarks/bin/
+/benchmarks/obj/

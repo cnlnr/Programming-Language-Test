@@ -1,0 +1,23 @@
+{
+  "python": {"command": ["python", "benchmarks/benchmark.py"]},
+  "javascript": {"command": ["node", "benchmarks/benchmark.js"]},
+  "cpp": {"compile": ["g++", "-O2", "-std=c++17", "benchmarks/benchmark.cpp", "-o", "benchmarks/benchmark_cpp.exe"], "command": ["benchmarks/benchmark_cpp.exe"]},
+  "java": {"compile": ["javac", "-d", "benchmarks", "benchmarks/Benchmark.java"], "command": ["java", "-cp", "benchmarks", "Benchmark"]},
+  "csharp": {"command": ["dotnet", "run", "--project", "benchmarks/FibBench.csproj"]},
+  "ruby": {"command": ["ruby", "benchmarks/benchmark.rb"]},
+  "php": {"command": ["php", "benchmarks/benchmark.php"]},
+  "go": {"command": ["go", "run", "benchmarks/benchmark.go"]},
+  "rust": {"compile": ["rustc", "-C", "opt-level=3", "benchmarks/benchmark.rs", "-o", "benchmarks/benchmark_rs.exe"], "command": ["benchmarks/benchmark_rs.exe"]},
+  "dart": {"command": ["dart", "run", "benchmarks/benchmark.dart"]},
+  "perl": {"command": ["perl", "benchmarks/benchmark.pl"]},
+  "lua": {"command": ["lua", "benchmarks/benchmark.lua"]},
+  "nim": {"compile": ["nim", "c", "-d:danger", "-o:benchmarks/benchmark_nim.exe", "benchmarks/benchmark.nim"], "command": ["benchmarks/benchmark_nim.exe"]},
+  "d": {"command": ["dmd", "-run", "benchmarks/benchmark.d"]},
+  "zig": {"command": ["zig", "run", "benchmarks/benchmark.zig", "--"]},
+  "r": {"command": ["Rscript", "benchmarks/benchmark.R"]},
+  "haskell": {"compile": ["ghc", "-O2", "-o", "benchmarks/benchmark_hs.exe", "benchmarks/benchmark.hs"], "command": ["benchmarks/benchmark_hs.exe"]},
+  "racket": {"command": ["racket", "benchmarks/benchmark.rkt"]},
+  "erlang": {"command": ["escript", "benchmarks/benchmark.erl"]},
+  "odin": {"command": ["odin", "run", "benchmarks/benchmark.odin", "-file", "--"]},
+  "v": {"command": ["v", "run", "benchmarks/benchmark.v"]}
+}

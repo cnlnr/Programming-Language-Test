@@ -1,6 +1,10 @@
 # Programming-Language-Test
 
-## 语言列表
+多语言编程环境检测 + 跨语言性能基准测试项目，用于检测当前系统中已安装的语言，并对不同语言进行统一基准测试，比较它们在 CPU 运算和数据处理方面的实际表现。
+
+## 3. 支持语言列表
+
+以下是本项目当前规划覆盖的语言：
 
 - Python
 - JavaScript
@@ -16,7 +20,6 @@
 - Perl
 - Lua
 - Haskell
-- Elixir
 - Clojure
 - Nim
 - D
@@ -24,12 +27,55 @@
 - Julia
 - Fortran
 - Ada
-- mojo
-- odin
-- c3
-- racket
-- Solidity
-- Roc
+- Odin
 - V
 - Erlang
+- Roc
+- Racket
+- Solidity
+- C3
+- Mojo
+- Lua
+- Erlang
 
+## 项目结构
+
+项目按“测试实现、统一运行、结果保存”三部分组织：
+
+```text
+Programming-Language-Test/
+├── README.md
+├── LICENSE
+├── test_environment.py              # 检测本机已安装的语言和版本
+├── benchmarks/                      # 各语言的合并测试程序
+│   ├── benchmark.py                 # Python：Fibonacci + 素数筛
+│   ├── benchmark.js                 # JavaScript：Fibonacci + 素数筛
+│   ├── benchmark.cpp                # C++：Fibonacci + 素数筛
+│   └── ...                           # 其他语言各一个文件
+├── runner/                          # 一键测试入口
+│   ├── config.json                  # 各语言编译和运行命令
+│   └── run_benchmarks.py            # 编译、运行、计时和生成 CSV
+└── results/                         # 测试结果目录
+    └── benchmark_results.csv
+```
+
+每个语言只对应一个 benchmark 文件，文件内部同时执行 Fibonacci 和素数筛。语言程序只输出两个耗时数据，不打印 CSV 表头；`runner/run_benchmarks.py` 统一负责添加语言名、状态和表头，避免重复处理结果格式。
+
+## 测试内容
+
+- **斐波那契递归**：纯 CPU 运算与函数调用/递归开销。
+- **素数筛（Sieve of Eratosthenes）**：循环、数组读写、内存访问性能。
+
+## Python 参考模板
+
+`benchmarks/benchmark.py` 是本项目唯一的参考模板。其他语言的 benchmark 应按照它实现相同的两个算法、计时方式和两字段输出协议，不在各语言文件中写死测试规模。
+
+测试规模由 `runner/run_benchmarks.py` 统一控制。修改 runner 中的 Fibonacci 输入值和素数筛上限后，所有语言会使用同一组测试参数。
+
+每个 benchmark 只输出一行两个耗时数据，不输出表头：
+
+```text
+fibonacci_time_sec,prime_time_sec
+```
+
+runner 负责传入测试参数、编译和运行各语言程序，并将语言、状态和耗时写入 CSV。不同机器的耗时会不同，因此只比较同一台机器、相同输入规模和相同编译优化条件下的结果。

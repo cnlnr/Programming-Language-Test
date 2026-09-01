@@ -1,0 +1,10 @@
+#lang racket
+(define (fibonacci number) (if (< number 2) number (+ (fibonacci (- number 1)) (fibonacci (- number 2)))))
+(define (count-primes limit) (for/sum ([number (in-range 2 (+ limit 1))] #:when (prime? number)) 1))
+(define (prime? number) (for/and ([factor (in-range 2 (+ (integer-sqrt number) 1))]) (not (zero? (remainder number factor)))))
+(define arguments (vector->list (current-command-line-arguments)))
+(define fibonacci-input (if (null? arguments) 35 (string->number (car arguments))))
+(define prime-limit (if (< (length arguments) 2) 200000 (string->number (cadr arguments))))
+(define start (current-inexact-milliseconds)) (define fr (fibonacci fibonacci-input)) (define ft (/ (- (current-inexact-milliseconds) start) 1000.0))
+(set! start (current-inexact-milliseconds)) (define pr (count-primes prime-limit)) (define pt (/ (- (current-inexact-milliseconds) start) 1000.0))
+(printf "~a,~a~n" ft pt)
