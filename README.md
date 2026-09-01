@@ -4,7 +4,12 @@
 
 ## 3. 支持语言列表
 
-以下是本项目当前规划覆盖的语言：
+当前项目分成两部分：
+
+- 当前已纳入 benchmark runner 的语言（实际可跑）
+- 环境检测中已确认安装的语言（可检测，但未必已做统一 benchmark）
+
+### 当前已纳入 benchmark runner 的语言
 
 - Python
 - JavaScript
@@ -20,23 +25,27 @@
 - Perl
 - Lua
 - Haskell
-- Clojure
 - Nim
 - D
 - Zig
-- Julia
+- Racket
+- Erlang
+- Clojure
+- Elixir
 - Fortran
-- Ada
+- Julia
 - Odin
 - V
-- Erlang
-- Roc
-- Racket
-- Solidity
+
+### 已安装但尚未全部接入 runner 的语言
+
+- Ada
 - C3
 - Mojo
-- Lua
-- Erlang
+- Roc
+- Solidity
+
+这些语言已在 `test_environment.py` 中加入检测命令，并且不少已安装命令可直接识别；不过在统一 benchmark 流程中，仍需要按 `runner/config.json` 的方式补齐 `compile`/`command` 和 benchmark 实现后，才能纳入完整跑批。
 
 ## 项目结构
 

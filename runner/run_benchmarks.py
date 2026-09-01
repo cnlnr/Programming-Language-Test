@@ -24,6 +24,8 @@ SOURCE_EXTENSIONS = {
     "rust": ".rs", "dart": ".dart", "perl": ".pl", "lua": ".lua",
     "nim": ".nim", "d": ".d", "zig": ".zig", "r": ".r", "haskell": ".hs",
     "racket": ".rkt", "erlang": ".erl", "odin": ".odin", "v": ".v",
+    "ada": ".adb", "c3": ".c3", "clojure": ".clj", "elixir": ".exs",
+    "fortran": ".f90", "julia": ".jl", "mojo": ".mojo", "roc": ".roc",
 }
 CSV_FIELDS = [
     "language", "status", "fibonacci_time_sec", "prime_time_sec",
@@ -43,7 +45,10 @@ def command_exists(command: list[str]) -> bool:
 
 def run_command(command: list[str]) -> subprocess.CompletedProcess[str]:
     executable = command[0]
-    if shutil.which(executable) is None and (ROOT / executable).exists():
+    resolved = shutil.which(executable)
+    if resolved is not None:
+        command = [resolved, *command[1:]]
+    elif (ROOT / executable).exists():
         command = [str(ROOT / executable), *command[1:]]
     return subprocess.run(
         command, cwd=ROOT, capture_output=True, text=True,

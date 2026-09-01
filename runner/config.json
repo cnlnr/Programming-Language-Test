@@ -18,6 +18,10 @@
   "haskell": {"compile": ["ghc", "-O2", "-o", "benchmarks/benchmark_hs.exe", "benchmarks/benchmark.hs"], "command": ["benchmarks/benchmark_hs.exe"]},
   "racket": {"command": ["racket", "benchmarks/benchmark.rkt"]},
   "erlang": {"command": ["escript", "benchmarks/benchmark.erl"]},
+  "clojure": {"command": ["clj", "benchmarks/benchmark.clj"]},
+  "elixir": {"command": ["elixir", "benchmarks/benchmark.exs"]},
+  "fortran": {"compile": ["gfortran", "-O2", "benchmarks/benchmark.f90", "-o", "benchmarks/benchmark_f90.exe"], "command": ["benchmarks/benchmark_f90.exe"]},
+  "julia": {"command": ["C:\\Users\\lzy\\AppData\\Local\\Programs\\Julia-1.12.7\\bin\\julia.exe", "benchmarks/benchmark.jl"]},
   "odin": {"command": ["odin", "run", "benchmarks/benchmark.odin", "-file", "--"]},
   "v": {"command": ["v", "run", "benchmarks/benchmark.v"]}
 }
