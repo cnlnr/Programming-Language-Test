@@ -48,9 +48,9 @@ Programming-Language-Test/
 ├── LICENSE
 ├── test_environment.py              # 检测本机已安装的语言和版本
 ├── benchmarks/                      # 各语言的合并测试程序
-│   ├── benchmark.py                 # Python：Fibonacci + 素数筛
-│   ├── benchmark.js                 # JavaScript：Fibonacci + 素数筛
-│   ├── benchmark.cpp                # C++：Fibonacci + 素数筛
+│   ├── benchmark.py                 # Python：递归 Fibonacci + 素数筛 + 非递归数值测试
+│   ├── benchmark.js                 # JavaScript：递归 Fibonacci + 素数筛 + 非递归数值测试
+│   ├── benchmark.cpp                # C++：递归 Fibonacci + 素数筛 + 非递归数值测试
 │   └── ...                           # 其他语言各一个文件
 ├── runner/                          # 一键测试入口
 │   ├── config.json                  # 各语言编译和运行命令
@@ -59,23 +59,24 @@ Programming-Language-Test/
     └── benchmark_results.csv
 ```
 
-每个语言只对应一个 benchmark 文件，文件内部同时执行 Fibonacci 和素数筛。语言程序只输出两个耗时数据，不打印 CSV 表头；`runner/run_benchmarks.py` 统一负责添加语言名、状态和表头，避免重复处理结果格式。
+每个语言只对应一个 benchmark 文件，文件内部同时执行三项测试。语言程序只输出三个耗时数据，不打印 CSV 表头；`runner/run_benchmarks.py` 统一负责添加语言名、状态和表头，避免重复处理结果格式。
 
 ## 测试内容
 
 - **斐波那契递归**：纯 CPU 运算与函数调用/递归开销。
 - **素数筛（Sieve of Eratosthenes）**：循环、数组读写、内存访问性能。
+- **非递归数值测试**：循环实现的 Fibonacci 数值计算，重复执行并累加结果，观察迭代计算性能。
 
 ## Python 参考模板
 
-`benchmarks/benchmark.py` 是本项目唯一的参考模板。其他语言的 benchmark 应按照它实现相同的两个算法、计时方式和两字段输出协议，不在各语言文件中写死测试规模。
+`benchmarks/benchmark.py` 是本项目唯一的参考模板。其他语言的 benchmark 应按照它实现相同的三项测试、计时方式和三字段输出协议，不在各语言文件中写死测试规模。
 
 测试规模由 `runner/run_benchmarks.py` 统一控制。修改 runner 中的 Fibonacci 输入值和素数筛上限后，所有语言会使用同一组测试参数。
 
-每个 benchmark 只输出一行两个耗时数据，不输出表头：
+每个 benchmark 只输出一行三个耗时数据和三个计算结果，不输出表头：
 
 ```text
-fibonacci_time_sec,prime_time_sec
+fibonacci_time_sec,prime_time_sec,iterative_numeric_time_sec,fibonacci_result,prime_result,iterative_numeric_result
 ```
 
-runner 负责传入测试参数、编译和运行各语言程序，并将语言、状态和耗时写入 CSV。不同机器的耗时会不同，因此只比较同一台机器、相同输入规模和相同编译优化条件下的结果。
+runner 负责传入测试参数、编译和运行各语言程序，并校验三个计算结果；计算结果只用于验证，不写入 CSV。runner 还会统计对应 benchmark 源文件中去除所有空白字符后的字符数，记录为 `code_chars_no_whitespace`。第三项测试的迭代次数由 runner 统一控制，当前为 `2_000_000`；默认 Fibonacci 输入为 `37`，素数筛上限为 `2_000_000`。CSV 字段为 `language,status,fibonacci_time_sec,prime_time_sec,iterative_numeric_time_sec,code_chars_no_whitespace,total_time_sec,error`。不同机器的耗时会不同，因此只比较同一台机器、相同输入规模和相同编译优化条件下的结果。
