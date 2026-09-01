@@ -12,24 +12,22 @@ defmodule Benchmark do
   end
 
   def count_primes(limit) do
-    is_prime =
-      Enum.map(0..limit, fn index ->
-        index >= 2
-      end)
-      |> List.to_tuple()
+    is_prime = :array.new(limit + 1, default: true)
+    is_prime = :array.set(0, false, is_prime)
+    is_prime = :array.set(1, false, is_prime)
 
-    Enum.reduce(2..trunc(:math.sqrt(limit)), is_prime, fn number, acc ->
-      if elem(acc, number) do
-        Enum.reduce((number * number)..limit//number, acc, fn multiple, inner_acc ->
-          :erlang.setelement(multiple + 1, inner_acc, false)
-        end)
-      else
-        acc
-      end
-    end)
-    |> Tuple.to_list()
-    |> Enum.with_index()
-    |> Enum.count(fn {value, idx} -> value and idx >= 2 end)
+    is_prime =
+      Enum.reduce(2..trunc(:math.sqrt(limit)), is_prime, fn number, acc ->
+        if :array.get(number, acc) do
+          Enum.reduce((number * number)..limit//number, acc, fn multiple, inner_acc ->
+            :array.set(multiple, false, inner_acc)
+          end)
+        else
+          acc
+        end
+      end)
+
+    Enum.count(2..limit, fn number -> :array.get(number, is_prime) end)
   end
 
   def run(fibonacci_input, prime_limit, numeric_iterations) do

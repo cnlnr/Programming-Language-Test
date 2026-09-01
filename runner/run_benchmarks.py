@@ -18,6 +18,7 @@ RESULTS_PATH = ROOT / "results" / "benchmark_results.csv"
 FIBONACCI_INPUT = 37
 PRIME_LIMIT = 2_000_000
 NUMERIC_ITERATIONS = 2_000_000
+COMMAND_TIMEOUT_SECONDS = 120
 SOURCE_EXTENSIONS = {
     "python": ".py", "javascript": ".js", "cpp": ".cpp", "java": ".java",
     "csharp": ".cs", "ruby": ".rb", "php": ".php", "go": ".go",
@@ -53,6 +54,7 @@ def run_command(command: list[str]) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         command, cwd=ROOT, capture_output=True, text=True,
         encoding="utf-8", errors="replace",
+        timeout=COMMAND_TIMEOUT_SECONDS,
     )
 
 
@@ -118,7 +120,12 @@ def execute(
         return row
 
     if "compile" in settings:
-        compile_result = run_command(settings["compile"])
+        try:
+            compile_result = run_command(settings["compile"])
+        except subprocess.TimeoutExpired:
+            row["status"] = "timeout"
+            row["error"] = f"command timed out after {COMMAND_TIMEOUT_SECONDS}s"
+            return row
         if compile_result.returncode != 0:
             row["status"] = "failed"
             row["error"] = " ".join((compile_result.stderr or compile_result.stdout).split())
@@ -130,9 +137,14 @@ def execute(
         return row
 
     started = time.perf_counter()
-    result = run_command(settings["command"] + [
-        str(FIBONACCI_INPUT), str(PRIME_LIMIT), str(NUMERIC_ITERATIONS),
-    ])
+    try:
+        result = run_command(settings["command"] + [
+            str(FIBONACCI_INPUT), str(PRIME_LIMIT), str(NUMERIC_ITERATIONS),
+        ])
+    except subprocess.TimeoutExpired:
+        row["status"] = "timeout"
+        row["error"] = f"command timed out after {COMMAND_TIMEOUT_SECONDS}s"
+        return row
     if result.returncode != 0:
         row["status"] = "failed"
         row["error"] = " ".join((result.stderr or result.stdout).split())
