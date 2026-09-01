@@ -7,3 +7,4 @@
 /benchmarks/*.pdb
 /benchmarks/bin/
 /benchmarks/obj/
+__pycache__/
